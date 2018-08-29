@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+  xmlns              = "http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi          = "http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.amberdata.inbound</groupId>
+  <artifactId>neo-inbound-module</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>eos-inbound-module</name>
+  <description>Amberdata inbound module for NEO</description>
+
+  <url>https://github.com/amberdata/neo-inbound-module</url>
+  <organization>
+    <name>Amberdata</name>
+    <url>https://amberdata.io</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.0.4.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.amberdata.ingestion</groupId>
+      <artifactId>ingestion-domain</artifactId>
+      <version>0.1.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- Publishing to Amberdata S3 Maven repository -->
+    <extensions>
+      <extension>
+        <groupId>org.springframework.build</groupId>
+        <artifactId>aws-maven</artifactId>
+        <version>5.0.0.RELEASE</version>
+      </extension>
+    </extensions>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>repository_amberdata_s3</id>
+
+      <activation>
+        <property>
+          <name>!repository_amberdata_s3.skip</name>
+        </property>
+      </activation>
+
+      <distributionManagement>
+        <repository>
+          <id>maven-s3-release-repo</id>
+          <name>AWS Release Repository</name>
+          <url>s3://amberdata-opensource/releases</url>
+        </repository>
+
+        <snapshotRepository>
+          <id>maven-s3-snapshot-repo</id>
+          <name>AWS Snapshot Repository</name>
+          <url>s3://amberdata-opensource/snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+
+      <repositories>
+        <repository>
+          <id>maven-s3-release-repo</id>
+          <name>S3 Release Repository</name>
+          <url>https://s3.amazonaws.com/amberdata-opensource/releases</url>
+        </repository>
+        <repository>
+          <id>maven-s3-snapshot-repo</id>
+          <name>S3 Snapshot Repository</name>
+          <url>https://s3.amazonaws.com/amberdata-opensource/snapshots</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+</project>
